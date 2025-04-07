@@ -23,6 +23,15 @@ location_hash = geometry_hash.fetch("location")
 pp lat = location_hash.fetch("lat")
 pp lng = location_hash.fetch("lng")
 
+pirate_weather_url = "https://api.pirateweather.net/forecast #{lat},#{lng}"
+raw_response = HTTP.get(pirate_weather_url)
+parsed_response = JSON.parse(raw_response)
+
+currently_hash = parsed_response.fetch("currently")
+
+current_temp = currently_hash.fetch("temperature")
+puts current_temp
+
 ###addy.fetch("address_components")
 ##lat = addy.fetch("navigation_points")
 #raw_response = HTTP.get(pirate_weateher_url)
