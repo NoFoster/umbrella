@@ -46,4 +46,14 @@ end
 
 
 result_hash = extract_time_and_precip(hourly_data_array)
-pp result_hash
+pp result_hash.key(>.0);
+
+first_nonzero_pair = result_hash.find do |timestamp, value|
+  value > 0
+end
+
+if first_nonzero_pair
+  # Use .at() to retrieve the timestamp from the resulting array
+  first_timestamp = first_nonzero_pair.at(0)
+  puts "The first timestamp with a value greater than zero is: #{first_timestamp}"
+end
