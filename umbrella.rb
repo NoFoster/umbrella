@@ -8,9 +8,9 @@ gmaps_key = ENV.fetch("GMAPS_KEY")
 
 pp "Hello where are you?"
 
-##my_location = gets.chomp
-my_location = "Chicago Booth Harper Center"
-##pp "Checking the weather in #{my_location}...."
+my_location = gets.chomp
+##my_location = "The White House"
+pp "Checking the weather in #{my_location}...."
 google_maps_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{my_location}&key=#{gmaps_key}"
 raw_body = HTTP.get(google_maps_url).to_s
 require "json"
@@ -23,6 +23,7 @@ location_hash = geometry_hash.fetch("location")
 lat = location_hash.fetch("lat")
 lng = location_hash.fetch("lng")
 
+
  pirate_weather_url = "https://api.pirateweather.net/forecast/#{pw_api_key}/#{lat},#{lng}"
 raw_response = HTTP.get(pirate_weather_url)
 parsed_response = JSON.parse(raw_response)
@@ -30,8 +31,8 @@ hourly_data_array = parsed_response.fetch("hourly").fetch("data")
 currently_hash = parsed_response.fetch("currently")
 current_temp = currently_hash.fetch("temperature")
 
-##pp "Your coordinates are #{lat},#{lng}."
-##pp "The current temperature is #{current_temp}."
+puts "Your coordinates are #{lat},#{lng}."
+puts "The current temperature is #{current_temp}."
 
 
 def extract_time_and_precip(hourly_data_array)
@@ -44,9 +45,7 @@ def extract_time_and_precip(hourly_data_array)
   return time_precip_hash
 end
 
-
 result_hash = extract_time_and_precip(hourly_data_array)
-pp result_hash.key(>.0);
 
 first_nonzero_pair = result_hash.find do |timestamp, value|
   value > 0
@@ -55,5 +54,7 @@ end
 if first_nonzero_pair
   # Use .at() to retrieve the timestamp from the resulting array
   first_timestamp = first_nonzero_pair.at(0)
-  puts "The first timestamp with a value greater than zero is: #{first_timestamp}"
+  pp "Grab an umbrella, it will rain in approximately #{(Time.at(first_timestamp) - Time.now).round(0)/60} minutes"
+elsif
+    pp "No need for an umbrella! No rain predicted today! :)"
 end
